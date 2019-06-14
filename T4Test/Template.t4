@@ -1,0 +1,26 @@
+﻿<#@ template debug="true" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="Depend.dll" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="T4Test" #>
+
+<#@ output extension=".cs" #>
+
+
+<#  var entityTypesWithMyAttribute =
+                from a in AppDomain.CurrentDomain.GetAssemblies()
+                from t in a.GetTypes()
+                let attributes = t.GetCustomAttributes(typeof(EntityAttribute), true)
+                where attributes != null && attributes.Length > 0
+                select new { Type = t, Attribute = attributes.Cast<EntityAttribute>().Single() };
+#>
+
+public class Template {
+
+
+}

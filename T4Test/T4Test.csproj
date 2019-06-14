@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+  <DotNetCliToolReference Include="dotnet-t4-project-tool" Version="2.0.4-*" />
+  <TextTemplate Include="**\Template.t4" />
+  <Generated Include="**\Template.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Depend\Depend.csproj" />
+  </ItemGroup>
+
+  <Target Name="TextTemplateTransform" BeforeTargets="BeforeBuild">
+    <ItemGroup>
+      <Compile Remove="**\*.cs" />
+    </ItemGroup>
+    <Message Text="t4 -P=$(SolutionDir)Depend\bin\Debug\netcoreapp2.1 %(TextTemplate.Identity)" />
+    <Exec ConsoleToMSBuild="true" WorkingDirectory="$(ProjectDir)" Command="t4 --debug -P=$(SolutionDir)Depend\bin\Debug\netcoreapp2.1 %(TextTemplate.Identity)">
+      <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
+    </Exec>
+    <Message Text="@(OutputOfExec)" />
+    <ItemGroup>
+      <Compile Include="**\*.cs" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="TextTemplateClean" AfterTargets="Clean">
+    <Delete Files="@(Generated)" />
+  </Target>
+
+</Project>
